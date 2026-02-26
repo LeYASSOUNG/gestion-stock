@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+stock-management/frontend/node_modules/
+
+# Build outputs
+target/
+stock-management/backend/target/
+.next/
+stock-management/frontend/.next/
+
+# IDEs
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
