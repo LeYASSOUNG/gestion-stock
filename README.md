@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 📦 QuickLodge : Système de Gestion de Stock
 
 <div align="center">
@@ -124,4 +124,3 @@ graph TD
 <p align="center">Développé avec ❤️ pour la gestion de stocks moderne.</p>
 =======
 # gestion-de-stock
->>>>>>> 8607b515344308b5d21771b4d03f0af20a3f6eac
