@@ -1,5 +1,5 @@
 
-# 📦 QuickLodge : Système de Gestion de Stock
+# 📦 Système de Gestion de Stock
 
 <div align="center">
 
