@@ -122,5 +122,5 @@ graph TD
 
 ---
 <p align="center">Développé avec ❤️ pour la gestion de stocks moderne.</p>
-=======
+
 # gestion-de-stock
