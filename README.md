@@ -1,126 +1,102 @@
-
-# 📦 Système de Gestion de Stock
+# 📦 Plateforme ERP SaaS Multi-Entreprises (Modulaire & Scalable)
 
 <div align="center">
 
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-15.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-4.4-blue?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-**Une solution moderne et sécurisée pour le contrôle des flux logistiques.**
+**Un système de gestion d'entreprise (ERP) moderne, isolé par locataire (Multi-Tenant) avec des modules spécialisés (Informatique, Pharmacie, Restaurant).**
 
-[Fonctionnalités](#-fonctionnalités) • [Installation](#-installation-et-configuration) • [Architecture](#-architecture) • [API](#-aperçu-de-lapi)
+[Modules & Architecture](#-modules-métiers-multi-tenant) • [Sécurité](#-sécurité-saas) • [Frontend Dynamique](#-frontend-nextjs-dynamique) • [Installation & Docker](#-guide-dinstallation)
 
 </div>
 
 ---
 
-## 🚀 Fonctionnalités
+## ✨ Modules Métiers Multi-Tenant
 
-### 🛡️ Sécurité & Accès
-*   **JWT Authentication** : Sessions sans état sécurisées.
-*   **RBAC (Role-Based Access Control)** : Hiérarchie `ADMIN` > `MANAGER` > `OPERATOR`.
-*   **CORS & CSRF Protégés** : Configuration robuste pour l'interopérabilité.
+L'application repose sur une architecture où chaque entreprise dispose de ses propres données isolées, et n'accède qu'aux modules pertinents pour son secteur d'activité :
 
-### 📦 Gestion de Stock
-*   **Fournisseurs** : Annuaires complets avec contact et statut actif.
-*   **Entrepôts & Localisations** : Tracking précis par site physique.
-*   **Inventaire Intelligent** : Suivi des quantités, alertes de stock bas (en dev).
-*   **Mouvements** : Historique complet des Entrées/Sorties/Transferts.
+### 🏢 1. Le Cœur d'Inventaire (Toutes entreprises)
+*   **Gestion centralisée** : Produits, catégories, entrepôts multiples, fournisseurs.
+*   **Mouvements de stock** : Entrées, sorties, transferts inter-entrepôts avec traçabilité complète.
+*   **Alertes** : Détection en temps réel des ruptures de stock.
 
----
+### 💻 2. Module Informatique (IT Store)
+*   **Suivi des équipements** : Ordinateurs, serveurs, périphériques.
+*   **Gestion des licences** : Traçabilité des clés logicielles et places disponibles.
+*   **Helpdesk & Support** : Système de tickets pour les incidents utilisateurs.
+*   **Maintenance** : Suivi du cycle de vie matériel et de l'entretien.
 
-## 🏗️ Architecture
+### 💊 3. Module Pharmacie
+*   **Traçabilité par lots** : Suivi strict des lots de médicaments.
+*   **Dates de péremption** : Alertes automatiques pour les produits expirant prochainement.
 
-```mermaid
-graph TD
-    User((Utilisateur))
-    Frontend[Next.js Dashboard]
-    API[Spring Boot REST API]
-    Security[JWT / Spring Security]
-    DB[(MySQL / H2)]
-
-    User -->|Interaction| Frontend
-    Frontend -->|Requests| Security
-    Security -->|Authorize| API
-    API -->|Persistence| DB
-```
+### 🍽️ 4. Module Restaurant
+*   **Gestion de Salle** : Plan de table et taux d'occupation.
+*   **Flux des commandes** : De la table à la cuisine jusqu'à la facturation.
 
 ---
 
-## 📋 Prérequis
+## 🏗️ Architecture Multi-Tenant & Sécurité SaaS
 
-| Outil | Version Minimale | Rôle |
+### Isolation des Données (Discriminator Pattern)
+Chaque table en base de données inclut une colonne `company_id`. Les entités JPA et les Repositories filtrent automatiquement les données pour s'assurer qu'un locataire (Tenant) ne voit que les informations de son entreprise.
+
+### Sécurité Avancée
+*   **Authentification JWT** : Jetons signés injectant les rôles et le `companyId` de l'utilisateur.
+*   **Rotation des Refresh Tokens** : Gestion de session sécurisée.
+*   **Validation `@Valid`** : Protection contre les injections.
+*   **Global Exception Handler** : Réponses standardisées.
+
+---
+
+## 🎨 Frontend Next.js Dynamique
+*   **Zustand Store** : Le frontend adapte instantanément son état global en fonction de l'entreprise connectée (`companyType`).
+*   **Dashboard Modulaire** : Les widgets et les menus de navigation (Sidebar) se reconstruisent dynamiquement selon le métier (Ex: Affichage des tables pour les restaurants, des tickets pour l'IT).
+*   **Thème Premium & Dark Mode** : Interface utilisateur riche, utilisant `TailwindCSS` et `HeroIcons`, offrant une expérience fluide et professionnelle.
+
+---
+
+## 📋 Endpoints API Principaux
+
+| Méthode | Endpoint | Description |
 | :--- | :--- | :--- |
-| **JDK** | 17+ | Environnement d'exécution Java |
-| **Node.js** | 18.x | Runtime pour Next.js |
-| **MySQL** | 5.7+ | Persistance des données (via XAMPP) |
-| **Maven** | 3.6+ | Gestion des dépendances Backend |
+| `POST` | `/api/auth/login` | Authentification (renvoie JWT + Données Entreprise) |
+| `GET` | `/api/modules/it/equipments/company/{id}` | Récupération des équipements (Isolé par tenant) |
+| `GET` | `/api/modules/it/tickets/company/{id}` | Liste des tickets de support (Isolé par tenant) |
+| `GET` | `/api/products/page` | Pagination et recherche filtrée des produits |
+| `GET` | `/api/reports/export/products/pdf` | Génération de rapports analytiques professionnels |
 
 ---
 
-## ⚙️ Installation et Configuration
+## ⚙️ Guide d'Installation
 
-### 🟢 1. Backend (Spring Boot)
-1.  **Préparation** : Lancez **XAMPP** et MySQL. Créez la base `stock_db`.
-2.  **Lancement** :
+### 🐳 Lancement avec Docker Compose (Recommandé)
+Assurez-vous d'avoir Docker installé, puis lancez à la racine du projet :
+```bash
+docker-compose up --build -d
+```
+*   **Frontend** : `http://localhost:3000`
+*   **Backend API** : `http://localhost:8080`
+*   **Base de Données** : Port `3306`
+
+### 💻 Lancement Manuel (Développement)
+1.  Configurez `stock_db` sur MySQL.
+2.  **Backend (Java/Spring Boot)** :
     ```bash
     cd stock-management/backend
     mvn spring-boot:run
     ```
-    *Option rapide (H2) :* `mvn spring-boot:run "-Dspring-boot.run.profiles=h2"`
-
-### 🔵 2. Frontend (Next.js)
-1.  **Installation** :
+3.  **Frontend (Next.js)** :
     ```bash
     cd stock-management/frontend
     npm install
-    ```
-2.  **Lancement** :
-    ```bash
     npm run dev
     ```
-
----
-
-## 🔑 Accès Rapide
-
-| Rôle | Login | Password |
-| :--- | :--- | :--- |
-| **Administrateur** | `admin` | `admin123` |
-
----
-
-## � Aperçu de l'API
-
-| Méthode | Endpoint | Description | Accès |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/login` | Authentification & JWT | Public |
-| `GET` | `/api/suppliers` | Liste des fournisseurs | Authentifié |
-| `POST` | `/api/suppliers` | Ajouter un fournisseur | ADMIN / MANAGER |
-| `GET` | `/api/warehouses` | Liste des entrepôts | Authentifié |
-
----
-
-## 📁 Roadmap du Projet
-
-```text
-├── stock-management
-│   ├── backend/
-│   │   ├── src/main/java/com/stockmanagement/
-│   │   │   ├── config/      # Sécurité & Beans
-│   │   │   ├── controller/  # Points d'entrée API
-│   │   │   ├── entity/      # Modèles de données JPA
-│   │   │   └── service/     # Logique métier
-│   └── frontend/
-│       ├── src/app/         # Routing App Router
-│       ├── src/context/     # Auth Context
-│       └── src/services/    # Axios API Client
-```
-
----
-<p align="center">Développé avec ❤️ pour la gestion de stocks moderne.</p>
-
-# gestion-de-stock

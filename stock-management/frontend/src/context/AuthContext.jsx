@@ -2,6 +2,7 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import api from '../services/api'
 import { toast } from 'react-hot-toast'
+import { useTenantStore } from '../store/tenantStore'
 
 const AuthContext = createContext(null)
 
@@ -83,6 +84,16 @@ export const AuthProvider = ({ children }) => {
       api.defaults.headers.Authorization = `Bearer ${token}`
 
       setUser(userData)
+      
+      // Mettre à jour le store du tenant si les infos sont présentes
+      if (userData.companyId) {
+        useTenantStore.getState().setTenant({
+          companyId: userData.companyId,
+          companyName: userData.companyName,
+          companyType: userData.companyType
+        })
+      }
+      
       toast.success('Connexion réussie')
       return true
     } catch (error) {
@@ -93,17 +104,32 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const register = async (userData) => {
+    try {
+      await api.post('/auth/register', userData)
+      toast.success('Compte créé avec succès ! Connectez-vous.')
+      return true
+    } catch (error) {
+      console.error('Registration error:', error)
+      const message = error.response?.data || error.message || 'Erreur lors de la création du compte'
+      toast.error(message)
+      return false
+    }
+  }
+
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     delete api.defaults.headers.Authorization
     setUser(null)
+    useTenantStore.getState().clearTenant()
     toast.success('Déconnexion réussie')
   }
 
   const value = {
     user,
     login,
+    register,
     logout,
     loading
   }

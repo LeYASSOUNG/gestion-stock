@@ -26,13 +26,13 @@ public class CategoryService {
         return categoryRepository.findByParentIsNull();
     }
 
-    public List<Category> getSubCategories(Long parentId) {
+    public List<Category> getSubCategories(@org.springframework.lang.NonNull Long parentId) {
         Category parent = categoryRepository.findById(parentId)
                 .orElseThrow(() -> new RuntimeException("Error: Parent category not found with id: " + parentId));
         return categoryRepository.findByParent(parent);
     }
 
-    public Optional<Category> getCategoryById(Long id) {
+    public Optional<Category> getCategoryById(@org.springframework.lang.NonNull Long id) {
         return categoryRepository.findById(id);
     }
 
@@ -45,7 +45,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category updateCategory(Long id, Category categoryDetails) {
+    public Category updateCategory(@org.springframework.lang.NonNull Long id, Category categoryDetails) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error: Category not found with id: " + id));
 
@@ -56,8 +56,9 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    @SuppressWarnings("null")
     @Transactional
-    public void deleteCategory(Long id) {
+    public void deleteCategory(@org.springframework.lang.NonNull Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error: Category not found with id: " + id));
 

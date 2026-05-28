@@ -112,7 +112,7 @@ public class StockMovementService {
                 });
     }
 
-    public List<StockMovement> getMovementsByProduct(Long productId) {
+    public List<StockMovement> getMovementsByProduct(@org.springframework.lang.NonNull Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         return movementRepository.findByProduct(product);

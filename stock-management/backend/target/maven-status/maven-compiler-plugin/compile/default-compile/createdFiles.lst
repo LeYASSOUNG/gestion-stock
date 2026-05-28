@@ -34,8 +34,11 @@ com\stockmanagement\config\DataInitializer.class
 com\stockmanagement\security\JwtTokenProvider.class
 com\stockmanagement\controller\AuthController.class
 com\stockmanagement\dto\JwtResponse.class
+com\stockmanagement\controller\UserController.class
+com\stockmanagement\service\UserService.class
 com\stockmanagement\controller\ReportController.class
 com\stockmanagement\entity\Product.class
 com\stockmanagement\service\UserDetailsServiceImpl.class
 com\stockmanagement\controller\WarehouseController.class
 com\stockmanagement\controller\ProductController.class
+com\stockmanagement\controller\StockController.class

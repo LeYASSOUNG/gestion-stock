@@ -1,4 +1,4 @@
-// File: C:\Users\diarr\Desktop\Projet de developpement personnel en java\stock-management\frontend\src\app\(dashboard)\categories\page.jsx
+// File: C:\Users\diarr\Desktop\Dosier dev\Projet de developpement personnel en java\stock-management\frontend\src\app\(dashboard)\categories\page.jsx
 import * as entry from '../../../../../src/app/(dashboard)/categories/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

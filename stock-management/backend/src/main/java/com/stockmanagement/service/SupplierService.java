@@ -26,7 +26,7 @@ public class SupplierService {
         return supplierRepository.findByActiveTrue();
     }
 
-    public Optional<Supplier> getSupplierById(Long id) {
+    public Optional<Supplier> getSupplierById(@org.springframework.lang.NonNull Long id) {
         return supplierRepository.findById(id);
     }
 
@@ -39,7 +39,7 @@ public class SupplierService {
     }
 
     @Transactional
-    public Supplier updateSupplier(Long id, Supplier supplierDetails) {
+    public Supplier updateSupplier(@org.springframework.lang.NonNull Long id, Supplier supplierDetails) {
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error: Supplier not found with id: " + id));
 
@@ -55,7 +55,7 @@ public class SupplierService {
     }
 
     @Transactional
-    public void deleteSupplier(Long id) {
+    public void deleteSupplier(@org.springframework.lang.NonNull Long id) {
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error: Supplier not found with id: " + id));
         supplier.setActive(false);

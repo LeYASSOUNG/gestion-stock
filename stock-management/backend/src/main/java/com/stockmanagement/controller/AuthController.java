@@ -30,9 +30,11 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final com.stockmanagement.service.RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseEntity<?> authenticateUser(@jakarta.validation.Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -42,17 +44,44 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Error: User not found"));
+        
+        com.stockmanagement.entity.RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+        
         String role = userDetails.getAuthorities().stream()
                 .findFirst()
                 .map(auth -> auth.getAuthority().replace("ROLE_", ""))
                 .orElse("OPERATOR");
 
+        Long companyId = null;
+        String companyName = null;
+        String companyType = null;
+        
+        if (user.getCompany() != null) {
+            companyId = user.getCompany().getId();
+            companyName = user.getCompany().getName();
+            companyType = user.getCompany().getType().name();
+        }
+
         return ResponseEntity
-                .ok(new JwtResponse(jwt, userDetails.getUsername(), user.getFirstName(), user.getLastName(), role));
+                .ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getUsername(), user.getFirstName(), user.getLastName(), role, companyId, companyName, companyType));
+    }
+
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken(@jakarta.validation.Valid @RequestBody com.stockmanagement.dto.TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(com.stockmanagement.entity.RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtTokenProvider.generateTokenFromUsername(user.getUsername());
+                    return ResponseEntity.ok(new com.stockmanagement.dto.TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@jakarta.validation.Valid @RequestBody RegisterRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }

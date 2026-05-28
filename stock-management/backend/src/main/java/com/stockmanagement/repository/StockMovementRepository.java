@@ -5,8 +5,6 @@ import com.stockmanagement.entity.Product;
 import com.stockmanagement.entity.Warehouse;
 import com.stockmanagement.entity.MovementType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +24,6 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, Lo
 
     List<StockMovement> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    Page<StockMovement> findAll(Pageable pageable);
 
     long countByCreatedAtAfter(LocalDateTime date);
 }

@@ -34,6 +34,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     private boolean active = true;
 
     @Column(name = "created_at")

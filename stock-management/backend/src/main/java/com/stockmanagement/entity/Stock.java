@@ -36,6 +36,10 @@ public class Stock {
 
     private String location; // Emplacement dans l'entrepôt
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
 

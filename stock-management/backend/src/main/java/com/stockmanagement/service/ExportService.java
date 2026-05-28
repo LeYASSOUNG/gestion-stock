@@ -113,4 +113,74 @@ public class ExportService {
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         return style;
     }
+
+    public byte[] exportProductsToPdf() {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            com.lowagie.text.Document document = new com.lowagie.text.Document();
+            com.lowagie.text.pdf.PdfWriter.getInstance(document, baos);
+            document.open();
+
+            document.add(new com.lowagie.text.Paragraph("Rapport des Produits - Systeme de Gestion de Stock"));
+            document.add(new com.lowagie.text.Paragraph(" "));
+
+            com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(6);
+            table.setWidthPercentage(100);
+            table.addCell("SKU");
+            table.addCell("Nom");
+            table.addCell("Prix");
+            table.addCell("Unite");
+            table.addCell("Categorie");
+            table.addCell("Seuil Min");
+
+            List<Product> products = productRepository.findAll();
+            for (Product product : products) {
+                table.addCell(product.getSku());
+                table.addCell(product.getName());
+                table.addCell(product.getPrice() != null ? product.getPrice().toString() : "0.00");
+                table.addCell(product.getUnit() != null ? product.getUnit() : "");
+                table.addCell(product.getCategory() != null ? product.getCategory().getName() : "");
+                table.addCell(String.valueOf(product.getMinStockAlert()));
+            }
+
+            document.add(table);
+            document.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur de generation PDF", e);
+        }
+    }
+
+    public byte[] exportStockToPdf() {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            com.lowagie.text.Document document = new com.lowagie.text.Document();
+            com.lowagie.text.pdf.PdfWriter.getInstance(document, baos);
+            document.open();
+
+            document.add(new com.lowagie.text.Paragraph("Rapport de l'Etat des Stocks"));
+            document.add(new com.lowagie.text.Paragraph(" "));
+
+            com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(5);
+            table.setWidthPercentage(100);
+            table.addCell("SKU");
+            table.addCell("Produit");
+            table.addCell("Entrepot");
+            table.addCell("Quantite");
+            table.addCell("Localisation");
+
+            List<Stock> stocks = stockRepository.findAll();
+            for (Stock stock : stocks) {
+                table.addCell(stock.getProduct().getSku());
+                table.addCell(stock.getProduct().getName());
+                table.addCell(stock.getWarehouse().getName());
+                table.addCell(String.valueOf(stock.getQuantity()));
+                table.addCell(stock.getLocation() != null ? stock.getLocation() : "");
+            }
+
+            document.add(table);
+            document.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur de generation PDF", e);
+        }
+    }
 }

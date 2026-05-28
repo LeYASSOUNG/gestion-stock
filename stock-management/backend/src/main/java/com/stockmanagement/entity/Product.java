@@ -44,7 +44,13 @@ public class Product {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
     private boolean active = true;
+
+    private String imageUrl;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

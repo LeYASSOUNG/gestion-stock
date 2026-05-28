@@ -2,9 +2,18 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../../services/api'
 import { toast } from 'react-hot-toast'
+import { 
+    BuildingOfficeIcon, 
+    MapPinIcon, 
+    UserIcon, 
+    PlusIcon, 
+    PencilIcon, 
+    TrashIcon, 
+    XMarkIcon 
+} from '@heroicons/react/24/outline'
 
 /**
- * Page de gestion des entrepôts Next.js.
+ * Page de gestion des entrepôts Next.js (Version Premium WOW Factor).
  */
 export default function WarehousesPage() {
     const [warehouses, setWarehouses] = useState([])
@@ -76,160 +85,230 @@ export default function WarehousesPage() {
     }
 
     if (loading) {
-        return <div className="flex justify-center">Chargement...</div>
+        return (
+            <div className="flex flex-col justify-center items-center h-64 space-y-4">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+                <span className="text-sm font-semibold text-slate-500">Chargement des entrepôts...</span>
+            </div>
+        )
     }
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">Entrepôts</h1>
+        <div className="space-y-6">
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Gestion des Entrepôts</h1>
+                    <p className="text-sm text-slate-500 mt-1">Configurez vos sites de stockage physiques et leurs responsables</p>
+                </div>
                 <button
                     onClick={() => setShowModal(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2.5 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md shadow-blue-500/10 text-sm font-semibold flex items-center space-x-2"
                 >
-                    Nouvel entrepôt
+                    <PlusIcon className="h-4.5 w-4.5 text-white" />
+                    <span>Nouvel entrepôt</span>
                 </button>
             </div>
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            {/* Table Container */}
+            <div className="bg-white/90 backdrop-blur-md shadow-sm overflow-hidden rounded-2xl border border-slate-100/80">
+                <table className="min-w-full divide-y divide-slate-100">
+                    <thead className="bg-slate-50/60">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Code
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Nom
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Localisation
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Responsable
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {warehouses.map((warehouse) => (
-                            <tr key={warehouse.id}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {warehouse.code}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {warehouse.name}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {warehouse.location}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {warehouse.manager}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <button
-                                        onClick={() => {
-                                            setEditingWarehouse(warehouse)
-                                            setFormData(warehouse)
-                                            setShowModal(true)
-                                        }}
-                                        className="text-blue-600 hover:text-blue-900 mr-3"
-                                    >
-                                        Modifier
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(warehouse.id)}
-                                        className="text-red-600 hover:text-red-900"
-                                    >
-                                        Supprimer
-                                    </button>
+                    <tbody className="bg-white divide-y divide-slate-100">
+                        {warehouses.length > 0 ? (
+                            warehouses.map((warehouse) => (
+                                <tr key={warehouse.id} className="hover:bg-slate-50/40 transition-colors">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-indigo-600">
+                                        {warehouse.code}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                                        <div className="flex items-center space-x-2.5">
+                                            <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600">
+                                                <BuildingOfficeIcon className="h-4 w-4" />
+                                            </div>
+                                            <span>{warehouse.name}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-slate-500">
+                                        <div className="flex items-center space-x-1.5">
+                                            <MapPinIcon className="h-4 w-4 text-slate-400" />
+                                            <span>{warehouse.location || <span className="text-slate-300 italic">Non spécifié</span>}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
+                                        <div className="flex items-center space-x-1.5">
+                                            <div className="h-6 w-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-[10px] font-bold uppercase">
+                                                {warehouse.manager?.[0] || 'R'}
+                                            </div>
+                                            <span className="font-semibold">{warehouse.manager || <span className="text-slate-300 italic">Aucun</span>}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold space-x-2">
+                                        <button
+                                            onClick={() => {
+                                                setEditingWarehouse(warehouse)
+                                                setFormData(warehouse)
+                                                setShowModal(true)
+                                            }}
+                                            className="inline-flex items-center justify-center p-2 rounded-lg bg-blue-500/5 hover:bg-blue-500/10 text-blue-600 transition-all"
+                                            title="Modifier"
+                                        >
+                                            <PencilIcon className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(warehouse.id)}
+                                            className="inline-flex items-center justify-center p-2 rounded-lg bg-red-500/5 hover:bg-red-500/10 text-red-600 transition-all"
+                                            title="Supprimer"
+                                        >
+                                            <TrashIcon className="h-4 w-4" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={5} className="px-6 py-12 text-center text-sm text-slate-400">
+                                    Aucun entrepôt configuré pour le moment.
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
 
-            {/* Modal */}
+            {/* Modal Dialog */}
             {showModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-                    <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                        <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
-                            {editingWarehouse ? 'Modifier l\'entrepôt' : 'Nouvel entrepôt'}
-                        </h3>
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Code
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.code}
-                                    onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
+                <div className="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity"
+                        onClick={() => {
+                            setShowModal(false)
+                            resetForm()
+                        }}
+                    />
+                    
+                    {/* Content Card */}
+                    <div className="relative mx-auto p-6 border border-white/20 w-full max-w-md shadow-2xl rounded-3xl bg-white/95 backdrop-blur-xl animate-fadeIn">
+                        <div className="flex justify-between items-center mb-5">
+                            <h3 className="text-lg font-bold text-slate-900">
+                                {editingWarehouse ? 'Modifier l\'entrepôt' : 'Nouvel entrepôt'}
+                            </h3>
+                            <button
+                                onClick={() => {
+                                    setShowModal(false)
+                                    resetForm()
+                                }}
+                                className="p-1 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                            >
+                                <XMarkIcon className="h-5 w-5" />
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="col-span-1">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                        Code
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Ex: ENT1"
+                                        value={formData.code}
+                                        onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                                        className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50/50 hover:bg-slate-50/80 focus:bg-white"
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                        Nom de l&apos;entrepôt
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Ex: Entrepôt Principal"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50/50 hover:bg-slate-50/80 focus:bg-white"
+                                    />
+                                </div>
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Nom
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    Localisation générale
                                 </label>
                                 <input
                                     type="text"
-                                    required
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Localisation
-                                </label>
-                                <input
-                                    type="text"
+                                    placeholder="Ex: Paris, France"
                                     value={formData.location}
                                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50/50 hover:bg-slate-50/80 focus:bg-white"
                                 />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Adresse
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    Adresse complète
                                 </label>
                                 <textarea
+                                    placeholder="Adresse géographique complète..."
                                     value={formData.address}
                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                    rows="2"
+                                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50/50 hover:bg-slate-50/80 focus:bg-white"
+                                    rows={2}
                                 />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Responsable
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    Responsable du site
                                 </label>
-                                <input
-                                    type="text"
-                                    value={formData.manager}
-                                    onChange={(e) => setFormData({ ...formData, manager: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
+                                <div className="relative">
+                                    <UserIcon className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
+                                    <input
+                                        type="text"
+                                        placeholder="Nom du manager..."
+                                        value={formData.manager}
+                                        onChange={(e) => setFormData({ ...formData, manager: e.target.value })}
+                                        className="w-full pl-10 pr-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50/50 hover:bg-slate-50/80 focus:bg-white"
+                                    />
+                                </div>
                             </div>
-                            <div className="flex justify-end space-x-3">
+
+                            <div className="flex justify-end space-x-3 pt-3">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         setShowModal(false)
                                         resetForm()
                                     }}
-                                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     Annuler
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                    className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-blue-500/10"
                                 >
                                     {editingWarehouse ? 'Modifier' : 'Créer'}
                                 </button>

@@ -28,4 +28,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findLowStockProducts();
 
     boolean existsBySku(String sku);
+
+    org.springframework.data.domain.Page<Product> findByActiveTrue(org.springframework.data.domain.Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.active = true AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :sku, '%')))")
+    org.springframework.data.domain.Page<Product> findByNameOrSkuContaining(String name, String sku, org.springframework.data.domain.Pageable pageable);
 }

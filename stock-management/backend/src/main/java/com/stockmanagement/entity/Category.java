@@ -33,6 +33,10 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     private List<Category> subCategories;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

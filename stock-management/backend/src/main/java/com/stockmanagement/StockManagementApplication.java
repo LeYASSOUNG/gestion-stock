@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * stock.
  */
 @SpringBootApplication
+@org.springframework.data.jpa.repository.config.EnableJpaAuditing
 public class StockManagementApplication {
     public static void main(String[] args) {
         SpringApplication.run(StockManagementApplication.class, args);

@@ -30,7 +30,7 @@ public class SupplierController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Supplier> getSupplierById(@PathVariable Long id) {
+    public ResponseEntity<Supplier> getSupplierById(@PathVariable @org.springframework.lang.NonNull Long id) {
         return supplierService.getSupplierById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +44,7 @@ public class SupplierController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<Supplier> updateSupplier(@PathVariable Long id, @RequestBody Supplier supplierDetails) {
+    public ResponseEntity<Supplier> updateSupplier(@PathVariable @org.springframework.lang.NonNull Long id, @RequestBody Supplier supplierDetails) {
         try {
             return ResponseEntity.ok(supplierService.updateSupplier(id, supplierDetails));
         } catch (RuntimeException e) {
@@ -54,7 +54,7 @@ public class SupplierController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteSupplier(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSupplier(@PathVariable @org.springframework.lang.NonNull Long id) {
         try {
             supplierService.deleteSupplier(id);
             return ResponseEntity.ok().build();

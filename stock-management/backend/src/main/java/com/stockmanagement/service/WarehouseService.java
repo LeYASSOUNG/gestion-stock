@@ -26,7 +26,7 @@ public class WarehouseService {
         return warehouseRepository.findByActiveTrue();
     }
 
-    public Optional<Warehouse> getWarehouseById(Long id) {
+    public Optional<Warehouse> getWarehouseById(@org.springframework.lang.NonNull Long id) {
         return warehouseRepository.findById(id);
     }
 
@@ -43,7 +43,7 @@ public class WarehouseService {
     }
 
     @Transactional
-    public Warehouse updateWarehouse(Long id, Warehouse warehouseDetails) {
+    public Warehouse updateWarehouse(@org.springframework.lang.NonNull Long id, Warehouse warehouseDetails) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error: Warehouse not found with id: " + id));
 
@@ -56,8 +56,9 @@ public class WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
+    @SuppressWarnings("null")
     @Transactional
-    public void deleteWarehouse(Long id) {
+    public void deleteWarehouse(@org.springframework.lang.NonNull Long id) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error: Warehouse not found with id: " + id));
         warehouseRepository.delete(warehouse);

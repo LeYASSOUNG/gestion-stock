@@ -48,6 +48,15 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String generateTokenFromUsername(String username) {
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(key(), Jwts.SIG.HS256)
+                .compact();
+    }
+
     /**
      * Construit la clé de signature.
      * Essaie d'abord de décoder le secret en Base64, sinon utilise les bytes UTF-8.

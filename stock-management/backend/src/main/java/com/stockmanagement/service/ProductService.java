@@ -27,7 +27,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product getProductById(Long id) {
+    public Product getProductById(@org.springframework.lang.NonNull Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
@@ -42,7 +42,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(Long id, Product productDetails) {
+    public Product updateProduct(@org.springframework.lang.NonNull Long id, Product productDetails) {
         Product product = getProductById(id);
         product.setName(productDetails.getName());
         product.setDescription(productDetails.getDescription());
@@ -52,11 +52,12 @@ public class ProductService {
         product.setUnit(productDetails.getUnit());
         product.setCategory(productDetails.getCategory());
         product.setSupplier(productDetails.getSupplier());
+        product.setImageUrl(productDetails.getImageUrl());
         return productRepository.save(product);
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
+    public void deleteProduct(@org.springframework.lang.NonNull Long id) {
         Product product = getProductById(id);
         product.setActive(false);
         productRepository.save(product);
@@ -72,5 +73,13 @@ public class ProductService {
 
     public List<Product> getProductsBySupplier(Supplier supplier) {
         return productRepository.findBySupplier(supplier);
+    }
+
+    public org.springframework.data.domain.Page<Product> getProductsPaginatedAndSearched(String search, int page, int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        if (search != null && !search.trim().isEmpty()) {
+            return productRepository.findByNameOrSkuContaining(search, search, pageable);
+        }
+        return productRepository.findByActiveTrue(pageable);
     }
 }

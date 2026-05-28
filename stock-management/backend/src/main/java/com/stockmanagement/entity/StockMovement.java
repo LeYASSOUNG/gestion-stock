@@ -45,6 +45,10 @@ public class StockMovement {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

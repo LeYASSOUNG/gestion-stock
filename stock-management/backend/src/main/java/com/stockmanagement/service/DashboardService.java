@@ -60,7 +60,20 @@ public class DashboardService {
 
     public Map<String, Object> getStockAlerts() {
         Map<String, Object> alerts = new HashMap<>();
-        alerts.put("lowStock", productRepository.findLowStockProducts());
+        java.util.List<Map<String, Object>> lowStockList = productRepository.findLowStockProducts().stream()
+                .map(product -> {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("id", product.getId());
+                    item.put("sku", product.getSku());
+                    item.put("name", product.getName());
+                    item.put("minStockAlert", product.getMinStockAlert());
+                    item.put("unit", product.getUnit());
+                    Integer totalStock = stockRepository.getTotalStockForProduct(product);
+                    item.put("currentQuantity", totalStock != null ? totalStock : 0);
+                    return item;
+                })
+                .collect(java.util.stream.Collectors.toList());
+        alerts.put("lowStock", lowStockList);
         return alerts;
     }
 }

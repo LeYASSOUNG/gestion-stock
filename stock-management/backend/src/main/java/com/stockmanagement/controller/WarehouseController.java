@@ -30,7 +30,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Warehouse> getWarehouseById(@PathVariable Long id) {
+    public ResponseEntity<Warehouse> getWarehouseById(@PathVariable @org.springframework.lang.NonNull Long id) {
         return warehouseService.getWarehouseById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +44,7 @@ public class WarehouseController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<Warehouse> updateWarehouse(@PathVariable Long id, @RequestBody Warehouse warehouseDetails) {
+    public ResponseEntity<Warehouse> updateWarehouse(@PathVariable @org.springframework.lang.NonNull Long id, @RequestBody Warehouse warehouseDetails) {
         try {
             return ResponseEntity.ok(warehouseService.updateWarehouse(id, warehouseDetails));
         } catch (RuntimeException e) {
@@ -54,7 +54,7 @@ public class WarehouseController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteWarehouse(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteWarehouse(@PathVariable @org.springframework.lang.NonNull Long id) {
         try {
             warehouseService.deleteWarehouse(id);
             return ResponseEntity.ok().build();

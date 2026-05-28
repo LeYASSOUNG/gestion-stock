@@ -54,4 +54,40 @@ public class ReportController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/export/products/pdf")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<byte[]> exportProductsPdf() {
+        try {
+            byte[] pdfContent = exportService.exportProductsToPdf();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "products.pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfContent);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/export/stock/pdf")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<byte[]> exportStockPdf() {
+        try {
+            byte[] pdfContent = exportService.exportStockToPdf();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "stock.pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfContent);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

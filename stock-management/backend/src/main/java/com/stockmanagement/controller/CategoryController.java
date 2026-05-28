@@ -30,7 +30,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<Category> getCategoryById(@PathVariable @org.springframework.lang.NonNull Long id) {
         return categoryService.getCategoryById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +44,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
+    public ResponseEntity<Category> updateCategory(@PathVariable @org.springframework.lang.NonNull Long id, @RequestBody Category categoryDetails) {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(id, categoryDetails));
         } catch (RuntimeException e) {
@@ -54,7 +54,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable @org.springframework.lang.NonNull Long id) {
         try {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok().build();

@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable @org.springframework.lang.NonNull Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
@@ -37,12 +37,12 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@PathVariable @org.springframework.lang.NonNull Long id, @RequestBody User user) {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable @org.springframework.lang.NonNull Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

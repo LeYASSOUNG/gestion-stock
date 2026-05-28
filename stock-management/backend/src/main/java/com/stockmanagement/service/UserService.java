@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(@org.springframework.lang.NonNull Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'id: " + id));
     }
@@ -43,7 +43,7 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(Long id, User userDetails) {
+    public User updateUser(@org.springframework.lang.NonNull Long id, User userDetails) {
         User user = getUserById(id);
 
         user.setFirstName(userDetails.getFirstName());
@@ -59,8 +59,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @SuppressWarnings("null")
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(@org.springframework.lang.NonNull Long id) {
         User user = getUserById(id);
         // On ne permet pas de supprimer le tout dernier admin possiblement
         // Mais pour l'instant on fait simple

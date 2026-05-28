@@ -31,6 +31,10 @@ public class Supplier {
 
     private boolean active = true;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
